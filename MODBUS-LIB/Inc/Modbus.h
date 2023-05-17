@@ -8,7 +8,7 @@
 #ifndef THIRD_PARTY_MODBUS_INC_MODBUS_H_
 #define THIRD_PARTY_MODBUS_INC_MODBUS_H_
 
-
+#include "main.h"
 #include "ModbusConfig.h"
 #include <inttypes.h>
 #include <stdbool.h>
@@ -197,9 +197,9 @@ typedef struct
 	//Task Modbus slave
 	osThreadId_t myTaskModbusAHandle;
 	//Timer RX Modbus
-	xTimerHandle xTimerT35;
+	TimerHandle_t xTimerT35;
 	//Timer MasterTimeout
-	xTimerHandle xTimerTimeout;
+	TimerHandle_t xTimerTimeout;
 	//Semaphore for Modbus data
 	osSemaphoreId_t ModBusSphrHandle;
 	// RX ring buffer for USART
@@ -265,7 +265,8 @@ void RingClear(modbusRingBuffer_t *xRingBuffer); // flushes the ring buffer
 
 extern uint8_t numberHandlers; //global variable to maintain the number of concurrent handlers
 
-
+void modbus_uart_rxcplt_callback(UART_HandleTypeDef * huart);
+void modbus_uart_txcplt_callback(UART_HandleTypeDef * huart);
 
 
 /* prototypes of the original library not implemented
