@@ -18,6 +18,8 @@
 #include "queue.h"
 #include "timers.h"
 
+_BEGIN_STD_C
+
 
 typedef enum
 {
@@ -283,6 +285,6 @@ void ModbusEnd(); //!<finish any communication and release serial communication 
 
 */
 
-
+_END_STD_C
 
 #endif /* THIRD_PARTY_MODBUS_INC_MODBUS_H_ */
