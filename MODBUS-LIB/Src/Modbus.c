@@ -651,13 +651,7 @@ void StartTaskModbusSlave(void *argument)
 
 	  if(modH-> xTypeHW == USB_CDC_HW)
 	  {
-		      ulTaskNotifyTake(pdTRUE, portMAX_DELAY); /* Block indefinitely until a Modbus Frame arrives */
-			  if (modH->u8BufferSize == ERR_BUFF_OVERFLOW) // is this necessary?
-			  {
-			     modH->i8lastError = ERR_BUFF_OVERFLOW;
-			  	 modH->u16errCnt++;
-			  	 continue;
-			  }
+		    ulTaskNotifyTake(pdTRUE, portMAX_DELAY); /* Block indefinitely until a Modbus Frame arrives */
 	  }
 #endif
 
@@ -703,6 +697,7 @@ void StartTaskModbusSlave(void *argument)
 	{
 
 #if ENABLE_TCP == 0
+		modH->addrMissmatchCnt++;
     	continue; // continue this is not for us
 #else
     	if(modH->xTypeHW != TCP_HW)

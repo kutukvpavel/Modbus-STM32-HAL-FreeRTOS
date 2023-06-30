@@ -190,6 +190,7 @@ typedef struct
 	uint16_t u16regsize;
 	uint8_t dataRX;
 	int8_t i8state;
+    uint16_t addrMissmatchCnt;
 
 	//FreeRTOS components
 
@@ -269,6 +270,7 @@ extern uint8_t numberHandlers; //global variable to maintain the number of concu
 
 void modbus_uart_rxcplt_callback(UART_HandleTypeDef * huart);
 void modbus_uart_txcplt_callback(UART_HandleTypeDef * huart);
+void modbus_cdc_rx_callback(uint8_t* Buf, uint32_t* Len);
 
 
 /* prototypes of the original library not implemented

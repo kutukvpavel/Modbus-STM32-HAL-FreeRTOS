@@ -11,6 +11,7 @@
 #include "main.h"
 #include "Modbus.h"
 
+#include <string.h>
 
 /**
  * @brief
@@ -88,6 +89,36 @@ void modbus_uart_rxcplt_callback(UART_HandleTypeDef * huart)
 	 * */
 
 }
+
+#if ENABLE_USB_CDC
+
+void modbus_cdc_rx_callback(uint8_t* Buf, uint32_t* Len)
+{
+	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+	for (int i = 0; i<numberHandlers; i++)
+	{
+		modbusHandler_t* h = mHandlers[i];
+		if (h->xTypeHW == USB_CDC_HW)
+		{
+			if (*Len > MAX_BUFFER)
+			{
+				h->i8lastError = ERR_BUFF_OVERFLOW;
+				h->u16errCnt++;
+			}
+			else
+			{
+				memcpy(h->u8Buffer, Buf, *Len);
+				h->u8BufferSize = *Len;
+				h->u16InCnt++;
+				xTaskNotifyFromISR(h->myTaskModbusAHandle, 0, eSetValueWithOverwrite, &xHigherPriorityTaskWoken);
+				portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+			}
+			break;
+		}
+	}
+}
+
+#endif
 
 
 #if  ENABLE_USART_DMA ==  1
